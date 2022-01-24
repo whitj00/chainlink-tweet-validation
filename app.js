@@ -10,7 +10,7 @@ app.use(bodyParser.json())
 app.use(cors())
 
 
-app.post('/verify-retweet', (req, res) => {
+app.post('/verify-tweet', (req, res) => {
   createRequest(req.body , (status, result) => {
     res.status(status).json(result.data.result)
   })

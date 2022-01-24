@@ -15,7 +15,7 @@ const customError = (data) => {
 const customParams = {
   tweetid: ['tweetid'],
   tweetContent: ['tweetcontent'],
-  username: ['username']
+  authorid: ['authorid']
 }
 
 const createRequest = (input, callback) => {
@@ -23,18 +23,20 @@ const createRequest = (input, callback) => {
   const validator = new Validator(input, customParams)
   const jobRunID = validator.validated.id
   const tweetid = validator.validated.data.tweetid
-  const url = 'https://api.twitter.com/2/tweets/' + tweetid,
-        
-  const username = validator.validated.data.username
+  const url = 'https://api.twitter.com/2/tweets/' + tweetid
+  console.log(url)
+  const author_id = validator.validated.data.authorid
   const tweetContent = validator.validated.data.tweetContent
 
   const params = {
-    expansions = 'author_id'
+    expansions: 'author_id'
   }
 
   const headers = {
     'Authorization' : `Bearer ${process.env.BEARER_TOKEN}`
   }
+
+  console.log(headers)
 
   // // This is where you would add method and headers
   // // you can add method like GET or POST and add it to the config
@@ -51,8 +53,10 @@ const createRequest = (input, callback) => {
   // // or connection failure
   Requester.request(config, customError)
     .then(response => {
-      const tweet = response.data;
-      response.data.result = tweetContent == tweet.text && tweet.username == username
+      const tweet = response.data.data;
+      console.log(author_id)
+      console.log(tweet.author_id)
+      response.data.result = tweetContent == tweet.text && tweet.author_id == author_id
       callback(response.status, Requester.success(jobRunID, response))
     })
     .catch(error => {
