@@ -13,22 +13,23 @@ const customError = (data) => {
 // with a Boolean value indicating whether or not they
 // should be required.
 const customParams = {
-  userid: ['userid'],
   tweetid: ['tweetid'],
-  endpoint: false,
+  tweetContent: ['tweetcontent'],
+  username: ['username']
 }
 
 const createRequest = (input, callback) => {
   // The Validator helps you validate the Chainlink request data
   const validator = new Validator(input, customParams)
   const jobRunID = validator.validated.id
-  const url = 'https://api.twitter.com/1.1/statuses/retweeters/ids.json'
   const tweetid = validator.validated.data.tweetid
-  const userid = validator.validated.data.userid
+  const url = 'https://api.twitter.com/2/tweets/' + tweetid,
+        
+  const username = validator.validated.data.username
+  const tweetContent = validator.validated.data.tweetContent
 
   const params = {
-    id: tweetid,
-    stringify_ids: true
+    expansions = 'author_id'
   }
 
   const headers = {
@@ -50,8 +51,8 @@ const createRequest = (input, callback) => {
   // // or connection failure
   Requester.request(config, customError)
     .then(response => {
-      const ids = response.data.ids
-      response.data.result = ids.includes(userid)
+      const tweet = response.data;
+      response.data.result = tweetContent == tweet.text && tweet.username == username
       callback(response.status, Requester.success(jobRunID, response))
     })
     .catch(error => {
