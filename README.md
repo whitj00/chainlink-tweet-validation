@@ -1,25 +1,12 @@
-# Chainink External Retweet Adapter
+# Chainink External Tweet Validation Adapter
 
-This external adapter is used to verify whether or not a specified twitter user has retweeted a tweet. It takes two parameters, "userid" and "tweetid", and returns true or false based on whether or not the user has retweeted the specific tweet.
+This external adapter is used to verify whether or not a specified twitter user has tweeted a tweet with a specific text. It takes three parameters, "authorid", "tweetcontent", and "tweetid", and returns true or false based on whether or not the user has retweeted the specific tweet.
 
 ## Input Params
 
-- `userid`: The id of a specific twitter user
+- `authorid`: The id of a specific twitter user
 - `tweetid`: The id of a specific tweet
-
-## Output
-
-```json
-{
- "jobRunID": "1",
- "data": {
-  "userid": "1234567",
-  "tweetid": "1234567891011"
- },
- "result": true,
- "statusCode": 200
-}
-```
+- `tweetcontent`: The content of that tweet
 
 ## Install Locally
 
@@ -48,7 +35,7 @@ yarn start
 ## Call the external adapter/API server
 
 ```bash
-curl -X POST -H "content-type:application/json" "http://localhost:8080/" --data '{ "id": 0, "data": { "userid": "123456", "tweetid": "12345678910" } }'
+curl -X POST -H "content-type:application/json" "http://localhost:8080/verify-tweet" --data '{ "id": 0, "data": { "authorid": "1349149096909668363", "tweetid": "1484175080183799811", "tweetcontent":"One year in, and America is moving forward." } }'
 ```
 
 ## AWS Lambda Setup
